@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Your Projects</h1>
+<a class="button" href="{% url 'project-create' %}">New Project</a>
+<div class="panel">
+    {% for project in projects %}
+        <a class="item" href="{% url 'project-detail' project.pk %}">
+            {{ project.name }}
+        </a>
+    {% empty %}
+        <p>No projects found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

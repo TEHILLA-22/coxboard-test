@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ project.name }}</h1>
+<p>{{ project.description }}</p>
+
+<a class="button" href="{% url 'task-create' project.pk %}">
+    Add Task
+</a>
+
+<div class="panel">
+    {% for task in tasks %}
+        <a class="item" href="{% url 'task-update' task.pk %}">
+            <strong>{{ task.title }}</strong>
+            <span>{{ task.get_status_display }}</span>
+        </a>
+    {% empty %}
+        <p>No tasks created yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

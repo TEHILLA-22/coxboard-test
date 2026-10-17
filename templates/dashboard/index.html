@@ -1,0 +1,58 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<section class="heading">
+    <div>
+        <p class="eyebrow">WORKSPACE OVERVIEW</p>
+        <h1>Welcome back, {{ user.username }}</h1>
+        <p>Here's what's happening across your projects.</p>
+    </div>
+    <a class="button" href="{% url 'project-create' %}">
+        + New Project
+    </a>
+</section>
+
+<section class="stats">
+    <article>
+        <span>Total Projects</span>
+        <strong>{{ project_count }}</strong>
+    </article>
+    <article>
+        <span>Total Tasks</span>
+        <strong>{{ stats.total }}</strong>
+    </article>
+    <article>
+        <span>In Progress</span>
+        <strong>{{ stats.in_progress }}</strong>
+    </article>
+    <article>
+        <span>Completed</span>
+        <strong>{{ stats.completed }}</strong>
+    </article>
+</section>
+
+<section class="panel">
+    <h2>Recent Projects</h2>
+    {% for project in projects %}
+        <a class="item" href="{% url 'project-detail' project.pk %}">
+            <strong>{{ project.name }}</strong>
+            <span>{{ project.get_status_display }}</span>
+        </a>
+    {% empty %}
+        <p>No projects yet. Create your first project.</p>
+    {% endfor %}
+</section>
+
+<section class="panel">
+    <h2>Recent Tasks</h2>
+    {% for task in recent_tasks %}
+        <div class="item">
+            <span>{{ task.title }}</span>
+            <span>{{ task.get_status_display }}</span>
+        </div>
+    {% empty %}
+        <p>No tasks yet.</p>
+    {% endfor %}
+</section>
+{% endblock %}
