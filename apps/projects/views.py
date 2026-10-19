@@ -15,6 +15,70 @@ from .forms import ProjectForm
 from .models import Project
 
 
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseNotAllowed
+from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_POST
+
+from .permissions import require_project_permission
+
+
+@require_POST
+@login_required
+def archive_project(request, pk):
+    project = get_object_or_404(
+        Project,
+        pk=pk,
+        memberships__user=request.user,
+    )
+
+    require_project_permission(
+        request.user, project, "archive"
+    )
+
+    project.status = Project.Status.ARCHIVED
+    project.save(update_fields=["status", "updated_at"])
+
+    return redirect("project-detail", pk=project.pk)
+
+
+@require_POST
+@login_required
+def restore_project(request, pk):
+    project = get_object_or_404(
+        Project,
+        pk=pk,
+        memberships__user=request.user,
+    )
+
+    require_project_permission(
+        request.user, project, "restore"
+    )
+
+    project.status = Project.Status.ACTIVE
+    project.save(update_fields=["status", "updated_at"])
+
+    return redirect("project-detail", pk=project.pk)
+
+
+@require_POST
+@login_required
+def delete_project(request, pk):
+    project = get_object_or_404(
+        Project,
+        pk=pk,
+        memberships__user=request.user,
+    )
+
+    require_project_permission(
+        request.user, project, "delete_project"
+    )
+
+    project.delete()
+    return redirect("project-list")
+
+
+
 def accessible_projects(user):
     return Project.objects.filter(
         Q(owner=user) | Q(memberships__user=user)

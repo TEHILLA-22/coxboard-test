@@ -19,6 +19,8 @@ urlpatterns = [
     path("accounts/", include("apps.accounts.urls")),
     path("projects/", include("apps.projects.urls")),
     path("tasks/", include("apps.tasks.urls")),
+    path("teams/", include("apps.teams.urls")),
+    
 
     path(
         "login/",
